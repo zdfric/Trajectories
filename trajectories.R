@@ -1,6 +1,7 @@
 library(geosphere)
 library(mapview)
 library(sf)
+
 # loading data
 CMRdata<-read.csv("tullia_Sumava_merged.csv")
 CMRdata<-read.delim("Neptis_2022.txt")
