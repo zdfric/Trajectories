@@ -4,24 +4,18 @@ library(sf)
 
 # loading data
 CMRdata<-read.csv("tullia_Sumava_merged.csv")
-CMRdata<-read.delim("Neptis_2022.txt")
-CMRdata<-read.delim("Tullia_Sumava_2022.txt")
 summary(CMRdata)
 dim(CMRdata)
 
 # to reformat date and time to date values
-# the time is currently stiored in format "2022/06/14 08:08:40.000"
+# the time is currently stored in format "2022/06/14 08:08:40.000"
 CMRdata$cas<-CMRdata$time
 CMRdata$time<-as.POSIXlt(CMRdata$date)
 summary(CMRdata)
-# time for Neptis
-CMRdata$time<-paste(paste(2022,CMRdata$m,CMRdata$d,sep="-"),round(CMRdata$Time..in.h.),sep=" ")   
-CMRdata$time<-as.POSIXlt(CMRdata$time,format = "%Y-%m-%d %H")
-#time for tullia Sumava
 CMRdata$time<-paste(CMRdata$time,round(CMRdata$cas),sep=" ")
 CMRdata$time<-as.POSIXlt(CMRdata$time,format = "%Y-%m-%d %H")
 
-#if not ordered according dates and time
+#if not ordered according to dates and time
 CMRdata<-CMRdata[order(CMRdata$time),]
 
 behavior_sezona_sex<-table(CMRdata$date,CMRdata$behaviour,CMRdata$sex)
@@ -38,7 +32,7 @@ dim(CMRdata)
 summary(CMRdata)
 CMRdata<-CMRdata[!is.na(CMRdata$time),]
 
-# extract the captured individuals; the individual codes stored in NAME column!
+# extract the captured individuals; the individual codes are stored in NAME column!
 
 individuals<-CMRdata[!duplicated(CMRdata$NAME),]
 individuals$code<-individuals$NAME
@@ -55,7 +49,7 @@ CMRdata.gis<-st_as_sf(CMRdata,coords = c(11,10))
 st_crs(CMRdata.gis) <- 4326
 mapview(CMRdata.gis)
 
-# to calculate the individual distances and drawing the trajectories to map
+# to calculate the individual distances and draw the trajectories on the map
 for (i in 1:nrow(individuals)) {
   one<-CMRdata[CMRdata$code==individuals$code[i],]
   if (nrow(one)>1) {
